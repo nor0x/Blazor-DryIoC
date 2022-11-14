@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject IMyDependentSerivce _dependentService;
+@inject IEnumerable<IBaseInterface> _services;
+@inject IEnumerable<KeyValuePair<string, IBaseInterface>> _keyedServices;
+
+<PageTitle>Index</PageTitle>
+
+
+<h1>value from lazy service:</h1>
+<h3>@value</h3>
+<br />
+<h1>registrations for IBaseInterface:</h1>
+@foreach(var s in services)
+{
+    <h3>@s.GetType().FullName</h3>
+}
+
+<h1>registrations for IBaseInterface with serviceKey:</h1>
+@foreach (var s in keyedServices)
+{
+    <h3>key: @s.Key type: @s.Value.GetType().FullName</h3>
+}
+
+@code
+{
+    IEnumerable<IBaseInterface> services;
+    IEnumerable<KeyValuePair<string, IBaseInterface>> keyedServices;
+    string value;
+
+    protected override void OnInitialized()
+    {
+        services = _services;
+        keyedServices = _keyedServices;
+        value = _dependentService.GetString();
+    }
+}
